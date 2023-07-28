@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<head>
+</head>
+<body>
+    <!--
+    <h1>Hello 2</h1>
+    <form action="login" method="post">
+        <input type="text" name="user" value="User Name">
+        <input type="text" name="pass" value="Password">
+        <div class="btn">Submit</div>
+    </form>
+    <script>
+        const btn = document.querySelector('.btn');
+        btn.addEventListener('click', function(){
+            const formData = new FormData(document.forms[0]);
+            const searchParams = new URLSearchParams();
+        for(let val of formData){
+            console.log(val);
+            searchParams.append(val[0],val[1]);
+        }
+        console.log(searchParams);
+            fetch('/login' ,{
+                method:'post',
+                body:searchParams
+            }).then(function(res){
+                return res.json();
+            }).then(function(data){
+                console.log(data);
+            });
+        });
+    </scrip>
+    -->
+    <h1>Browser Side Javascript</h1>
+    <input name="user" type="text" value="laurence">
+    <button class="btn">Join</button>
+    <div class="output"></div>
+
+    <script src='/socket.io/socket.io.js'></script>
+    <script>
+        const socket = io();
+        const btn = document.querySelector('.btn');
+        const output = document.querySelector('.output');
+        const user = document.querySelector('input[name="user"]');
+        btn.addEventListener('click' ,function(){
+            let id = 'player_' + Math.floor(Date.now() * Math.random());
+            socket.emit('new player',id ,user.value);
+
+        });
+
+        socket.on('players', listPlayers);
+
+        function listPlayers(players){
+            console.log(players);
+        }
+    </script>
+</body>
+</html>
