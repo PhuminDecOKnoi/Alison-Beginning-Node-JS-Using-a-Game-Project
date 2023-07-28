@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+    <head>
+
+    </head>
+    <body>
+        <h2>JavaScript</h2>
+        <pre>
+            Javascript
+            const http = require('http');
+             
+            let hostname = '127.0.0.1';
+            let port = 3000;
+             
+            let server = http.createServer((req, res) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'text/plain');
+                res.end('Hello World\n');
+            });
+             
+            server.listen(port, hostname, () => {
+                console.log(`Server running at http://${hostname}:${port}/`);
+            });
+        </pre>
+        <a href="./">back</a>
+    </body>
+</html>
