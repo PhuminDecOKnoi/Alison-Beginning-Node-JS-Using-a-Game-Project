@@ -4,8 +4,8 @@
 //const path = require('path');
 //const _ = require('lodash');
 
+const exp = require('constants');
 const express = require('express');
-const expreess = require('express');
 
 /*
 http.createServer(function(request ,response){
@@ -128,19 +128,70 @@ app.listen(port ,function(){
 }); */
 
 //app.use(expreess.static(__dirname));
+/*
+app.use(express.static(__dirname));
 
-app.get('/', function(req ,res){
-    res.sendFile(__dirname+ '/index1.html')
+const users = [
+    {user:'Launrence',pass:'password'},
+    {user:'Jane',pass:'secreat'},
+    {user:'Joe',pass:'pass'},
+    {user:'Linda',pass:'xxxxpass'}
+];
+
+app.get('/users', function(req ,res){
+    res.send(users);
 });
 
-app.get('/2', function(req ,res){
-    res.sendFile(__dirname+ '/index2.html')
-});
 
-app.get('/3', function(req ,res){
-    res.sendFile(__dirname+ '/index3.html')
+
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.urlencoded({
+    extends :true
+}));
+app.use(bodyParser.json()); //for parsing json
+app.use(express.static(__dirname+ '/public'));
+
+app.get('/' ,function(req ,res){
+    res.sendFile('index.html');
+}); 
+
+app.post('/login', function(req ,res){
+    let userName = req.body.user;
+    let passWord = req.body.pass;
+    console.log(userName +' '+ passWord);
+    
+    res.json({stsatus : true});
 });
 
 app.listen(port, function(){
     return console.log('port is '+port);
+}); 
+// leasson 10
+*/
+const http = require('http').Server(app);
+const socket = require('socket.io')(http);
+let players = [];
+
+app.use(express.static(__dirname + '/public'));
+app.get('/',function(req ,res){
+    res.sendFile('index.html');
+});
+
+socket.on('connection',function(s){
+    console.log('ready to use socket');
+    s.on('new player', function(id, name){
+        console.log(id);
+        console.log(name);
+        players.push({
+            name : name,
+            id : id
+        });
+        socket.emit('players',players);
+    });
+    socket.emit('players',players);
+});
+
+const server = http.listen(port, function(){
+    console.log('ready' ,+ port);
 });
