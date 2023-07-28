@@ -1,0 +1,16 @@
+<Html>
+    <head></head>
+    <body>
+    <script>
+            function message(greeting, callback){
+                console.log(greeting);
+                callback();
+            }
+
+            function afterword(){
+                console.log('Good Bye');
+            }
+                message('Hello',afterword); // function = message(greeting ,callback);
+        </script>
+    </body>
+</Html>
