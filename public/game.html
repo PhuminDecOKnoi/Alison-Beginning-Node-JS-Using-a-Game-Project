@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><title>Game Project</title></head>
+    <body>
+        <h1 class="user">Welcome</h1>
+        <h1 class="message"></h1>
+        <div class="output"></div>
+        <input name="user" type="text" value="user">
+        <button class="btn1">Join</button>
+        <button class="btn2" style="display: none;">Roll</button>
+        <!-- 
+        <hr>
+        <div>
+            <h2>Game Project - Lesson Summary</h2>
+            <h3>Below you will find key information covered in this module:</h3>
+            <ol>
+                <li>A frequent operation for a web server is to open a file and deliver its contents to the client. The following describes how PHP or ASP processes a file request: Sends the job to the file system of the machine. Waits until the file is opened and read by the file system. Sends material back to the client. Prepared to respond to the next inquiry.</li>
+                <li>Here is how Node.js processes a request for a file: <br/>
+                    -Sends the job to the file system of the machine. <br/>
+                    -Prepared to respond to the next inquiry. <br/>
+                    -The server returns the file's content to the client when the file system has opened and read it. <br/>
+                </li>
+                <li>Node.js is capable of generating dynamic page content. Node.js can create, open, read, write, remove, and close server-side files. Node.js can gather form data. Node.js can add, remove, alter data in your database.</li>
+                <li>Node.js is an open-source, cross-platform, back-end JavaScript runtime environment that executes JavaScript code outside of a web browser and is meant to construct scalable network applications.</li>
+                <li>Node.js enables developers to utilise JavaScript to construct command line tools and for server-side scripting — executing scripts server-side to generate dynamic web page content prior to sending the page to the user's web browser.</li>
+            </ol>
+        </div>
+        -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            const socket = io();
+            const output = document.querySelector('.output');
+            const message = document.querySelector('.message');
+            const user = document.querySelector('input');
+            const btn1 = document.querySelector('.btn1');
+            const btn2 = document.querySelector('.btn2');
+            const topMessge = document.querySelector('.user');
+            btn1.addEventListener('click',function(){
+                let id = 'player_'+Math.floor(Date.now() * Math.random());
+                    socket.emit('new player', id ,user.value);
+                    user.style.display = 'none';
+                    btn1.style.display = 'none';
+                    btn2.style.display = 'block';
+                    topMessge.textContent = 'Player:'+user.value;
+            });
+
+            btn2.addEventListener('click', function(){
+                socket.emit('roll');
+                btn2.disabled = true;
+            });
+
+            socket.on('players',listPlayers);
+            socket.on('inplay',checkwinner);
+
+            function checkwinner(data){
+                message.innerHTML = data;
+                btn2.disabled = false;
+            }
+
+            function listPlayers(players){
+                message.textContent = players.length>0 ? `Round ${players[0].round}`:`First Round 0`;
+                output.innerHTML = 'players :';
+                
+                players.forEach(function(player){
+                    let div = document.createElement('div');
+                    let temp = player.roll == null ? 'waiting' : 'Roll:'+ player.roll;
+                    div.textContent = `${player.name} roll = ${temp}`;
+                    div.style.color = player.winner ? 'green' : 'black';
+                    output.appendChild(div);
+                })
+            }
+        </script>
+    </body>
+</html>
